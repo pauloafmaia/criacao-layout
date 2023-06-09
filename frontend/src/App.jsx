@@ -115,7 +115,7 @@ function App() {
             />
           </div>
           <div className="p-2 flex justify-center uppercase font-bold">
-            <h1>Nome genérico</h1>
+            <h1>Nome Genérico</h1>
           </div>
           <div className="text-sm text-center p-2 flex justify-center">
             <p>
