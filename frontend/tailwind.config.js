@@ -9,7 +9,11 @@ export default {
       xl: "1280px",
       "2xl": "1536px",
     },
-    extend: {},
+    extend: {
+      colors: {
+        "dodger-blue": "#1e90ff",
+      },
+    },
   },
   plugins: [],
 };
