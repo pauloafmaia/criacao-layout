@@ -3,36 +3,66 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 function App() {
-  const [movies, setMovies] = useState([]);
+  const [rotinaDia, setRotinaDia] = useState([]);
+  const [rotinaNoite, setRotinaNoite] = useState([]);
   const { register, handleSubmit } = useForm();
-  const onSubmit = async (data) => {
-    const response = await fetch("https://r10d10.onrender.com/movies", {
+  const onSubmitDia = async (data) => {
+    const response = await fetch("http://localhost:4000/rotina-dia", {
       body: JSON.stringify(data),
       headers: { "Content-Type": "application/json" },
       method: "POST",
     });
     if (response.status == 201) {
-      loadMovies();
+      buscarRotinaDia();
+    }
+  };
+  const onSubmitNoite = async (data) => {
+    const response = await fetch("http://localhost:4000/rotina-noite", {
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+    });
+    if (response.status == 201) {
+      buscarRotinaNoite();
     }
   };
 
   useEffect(() => {
-    fetch("https://r10d10.onrender.com/movies").then((response) => {
-      response.json().then((json) => setMovies(json));
+    fetch("http://localhost:4000/rotina-dia").then((response) => {
+      response.json().then((json) => setRotinaDia(json));
     });
   }, []);
 
-  const deleteMovie = async (id) => {
-    const response = await fetch(`https://r10d10.onrender.com/movies/${id}`, {
+  useEffect(() => {
+    fetch("http://localhost:4000/rotina-noite").then((response) => {
+      response.json().then((json) => setRotinaNoite(json));
+    });
+  }, []);
+
+  const deletarRotinaDia = async (id) => {
+    const response = await fetch(`http://localhost:4000/rotina-dia/${id}`, {
       method: "DELETE",
     });
 
-    if (response.status == 200) loadMovies();
+    if (response.status == 200) buscarRotinaDia();
   };
 
-  const loadMovies = () => {
-    fetch("https://r10d10.onrender.com/movies").then((response) => {
-      response.json().then((json) => setMovies(json));
+  const deletarRotinaNoite = async (id) => {
+    const response = await fetch(`http://localhost:4000/rotina-noite/${id}`, {
+      method: "DELETE",
+    });
+
+    if (response.status == 200) buscarRotinaNoite();
+  };
+
+  const buscarRotinaDia = () => {
+    fetch("http://localhost:4000/rotina-dia").then((response) => {
+      response.json().then((json) => setRotinaDia(json));
+    });
+  };
+  const buscarRotinaNoite = () => {
+    fetch("http://localhost:4000/rotina-noite").then((response) => {
+      response.json().then((json) => setRotinaNoite(json));
     });
   };
 
@@ -156,12 +186,12 @@ function App() {
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {movies.map((movie) => (
+                  {rotinaDia.map((rotina) => (
                     <>
                       <tr>
-                        <td className="px-2 py-2 text-sm">{movie.name}</td>
+                        <td className="px-2 py-2 text-sm">{rotina.rotina}</td>
                         <td className="px-2 py-2 flex justify-center items-center">
-                          <button onClick={() => deleteMovie()}>
+                          <button onClick={() => deletarRotinaDia()}>
                             <Icon
                               icon="material-symbols:delete"
                               width="20"
@@ -183,14 +213,14 @@ function App() {
                 </button>
               </div>
               <div className="hidden" id="formDia">
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmitDia)}>
                   <div className="flex flex-row pb-2">
                     <input
                       type="text"
-                      id="rotinaDia"
+                      id="rotina"
                       placeholder="Rotina"
                       className="text-sm w-full px-1 py-1 rounded"
-                      {...register("rotinaDia", {
+                      {...register("rotina", {
                         required: "Rotina é obrigatória",
                       })}
                     />
@@ -214,12 +244,12 @@ function App() {
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {movies.map((movie) => (
+                  {rotinaNoite.map((rotina) => (
                     <>
                       <tr>
-                        <td className="px-2 py-2 text-sm">{movie.name}</td>
+                        <td className="px-2 py-2 text-sm">{rotina.rotina}</td>
                         <td className="px-2 py-2 flex justify-center items-center">
-                          <button onClick={() => deleteMovie()}>
+                          <button onClick={() => deletarRotinaNoite()}>
                             <Icon
                               icon="material-symbols:delete"
                               width="20"
@@ -241,18 +271,19 @@ function App() {
                 </button>
               </div>
               <div className="hidden" id="formNoite">
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmitNoite)}>
                   <div className="flex flex-row">
                     <input
                       type="text"
-                      id="rotinaNoite"
+                      id="rotina"
                       placeholder="Rotina"
                       className="text-sm w-full px-1 py-1 rounded"
-                      {...register("rotinaNoite", {
+                      {...register("rotina", {
                         required: "Rotina é obrigatória",
                       })}
                     />
                     <button type="submit">
+                      Criar
                       <Icon
                         icon="material-symbols:send"
                         width="30"
